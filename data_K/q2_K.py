@@ -22,7 +22,7 @@ class Q2_K:
 
         En = self.data_K.E_K
         self.kron = np.array(abs(En[:, :, None] - En[:, None, :]) < self.dEnm_threshold, dtype=int)
-        self.anti_kron = self.smooth_cutoff #np.ones((self.data_K.nk, self.data_K.num_wann, self.data_K.num_wann)) - self.kron
+        self.anti_kron = np.ones((self.data_K.nk, self.data_K.num_wann, self.data_K.num_wann)) - self.kron
 
     ####################################
     # BASIC QUANTITIES 
