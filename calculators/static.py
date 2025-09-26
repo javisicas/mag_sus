@@ -651,3 +651,165 @@ class SHC(StaticCalculator):
         self.Formula = frml.SpinOmega
         self.fder = 0
         super().__init__(constant_factor=constant_factor, **kwargs)
+
+####################################################################
+
+from ..symmetry.point_symmetry import transform_ident, transform_odd
+
+speed_of_light = 3*10**10 #cm/s
+elementary_charge = 4.8032*10**-10 #cm^3/2 g^1/2 s^-1
+hbar = 1.0546*10**-27 #cm^2 g s^-1
+eV_ergs = 1.6022*10**-12
+electron_mass = 9.1094*10**-28 #g
+
+########
+# RING #
+########
+
+
+class Inter_formula():
+
+    def __init__(self, data_K):
+        self.transformTR = transform_ident
+        self.transformInv = transform_ident
+        self.ndim = 2
+
+        M = data_K.Q2.magnetic_dipole_inter
+        E = data_K.Q2.E
+        Edif = E[:,:,None] - E[:,None,:]
+        invEdif_eta = Edif / (Edif ** 2 + data_K.Q2.eta ** 2)
+        invEdif = data_K.Q2.invEdif
+        anti_kron = data_K.Q2.anti_kron
+
+        summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
+        summ += -2 * np.einsum('knmi, knml, knm, knm -> knmil', M, M.conj(), invEdif, anti_kron)
+        self.Imn = summ.real
+    
+    def trace(self, ik, inn, out):
+        innout = np.concatenate((inn, out))
+        return self.Imn[ik, inn].sum(axis=0)[innout].sum(axis=0)
+
+    @property
+    def additive(self):
+        return True
+
+
+class Inter(StaticCalculator):
+
+    def __init__(self, **kwargs):
+        self.Formula = Inter_formula
+        self.fder = 0
+        super().__init__(**kwargs)
+
+    def __call__(self, data_K):
+        return super().__call__(data_K) * factors.factor_cell_volume_to_m
+
+
+class Occ2_Orb_formula():
+    def __init__(self, data_K):
+        self.transformTR = transform_ident
+        self.transformInv = transform_ident
+        self.ndim = 2
+
+        O = data_K.Q2.berry_curvature_truncation
+        M = data_K.Q2.magnetic_dipole_orb
+        kron = data_K.Q2.kron
+
+        summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
+        summ += np.einsum('knmi, kmnl, knm -> knmil', O, M, kron)
+        summ += np.einsum('knmi, kmnl, knm -> knmil', M, O, kron)
+        summ *= -elementary_charge / ( 2 * hbar * speed_of_light)
+
+        self.Imn = np.real(summ)
+
+    def trace(self, ik, inn, out):
+        innout = np.concatenate((inn, out))
+        return self.Imn[ik, inn].sum(axis=0)[innout].sum(axis=0)
+
+    @property
+    def additive(self):
+        return True
+
+
+class Occ2_Orb(StaticCalculator):
+    def __init__(self, **kwargs):
+        self.Formula = Occ2_Orb_formula
+        self.fder = 0
+        super().__init__(**kwargs)
+
+    def __call__(self, data_K):
+        return super().__call__(data_K) * factors.factor_cell_volume_to_m
+
+
+class Occ_formula():
+    def __init__(self, data_K):
+        self.transformTR = transform_ident
+        self.transformInv = transform_ident
+        self.ndim = 2
+
+        A = data_K.Q2.A
+        lev = data_K.Q2.levicivita
+        anti_kron = data_K.Q2.smooth_cutoff 
+        mass_sum_rule = data_K.Q2.mass_sum_rule
+
+        summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
+        summ += np.einsum('iab, lcd, knma, kmnc, knndb, knm -> knmil', 
+                           lev, lev, A, A, mass_sum_rule, anti_kron)
+        summ *= elementary_charge**2 / ( 4 * hbar**2 * speed_of_light**2 )
+
+        self.Imn = np.real(summ)
+
+    def trace(self, ik, inn, out):
+        innout = np.concatenate((inn, out))
+        return self.Imn[ik, inn].sum(axis=0)[innout].sum(axis=0)
+
+    @property
+    def additive(self):
+        return True
+
+
+class Occ(StaticCalculator):
+    def __init__(self, **kwargs):
+        self.Formula = Occ_formula
+        self.fder = 0
+        super().__init__(**kwargs)
+
+    def __call__(self, data_K):
+        return super().__call__(data_K) * factors.factor_cell_volume_to_m
+    
+
+class Occ2_Spin_formula():
+    def __init__(self, data_K):
+        self.transformTR = transform_ident
+        self.transformInv = transform_ident
+        self.ndim = 2
+
+        O = data_K.Q2.berry_curvature_truncation
+        M = data_K.Q2.magnetic_dipole_spin 
+        kron = data_K.Q2.kron
+        # print(O)
+
+        summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
+        summ += np.einsum('knmi, kmnl, knm -> knmil', O, M, kron)
+        summ += np.einsum('knmi, kmnl, knm -> knmil', M, O, kron)
+        summ *= -elementary_charge / ( 2 * hbar * speed_of_light)
+
+        self.Imn = np.real(summ)
+
+    def trace(self, ik, inn, out):
+        innout = np.concatenate((inn, out))
+        return self.Imn[ik, inn].sum(axis=0)[innout].sum(axis=0)
+
+    @property
+    def additive(self):
+        return True
+
+
+class Occ2_Spin(StaticCalculator):
+    def __init__(self, **kwargs):
+        self.Formula = Occ2_Spin_formula
+        self.fder = 0
+        super().__init__(**kwargs)
+
+    def __call__(self, data_K):
+        return super().__call__(data_K) * factors.factor_cell_volume_to_m

@@ -231,6 +231,7 @@ class Data_K(System, abc.ABC):
         #        print ("E_K = ",E_K.min(), E_K.max(), E_K.mean())
         self.select_bands(E_K)
         self._UU = np.array([euu[1] for euu in EUU])[self.select_K, :][:, self.select_B]
+        # print(self._UU.shape)
         return E_K[self.select_K, :][:, self.select_B]
 
     # evaluate the energies in the corners of the parallelepiped, in order to use tetrahedron method

@@ -65,7 +65,8 @@ class DynamicCalculator(Calculator, abc.ABC):
 
     def nonzero(self, E1, E2):
         if (E1 < self.eocc1max and E2 < self.eocc1max) or (E1 > self.eocc0min and E2 > self.eocc0min):
-            return False
+            # return False
+            return True
         else:
             return True
 
@@ -76,22 +77,28 @@ class DynamicCalculator(Calculator, abc.ABC):
             len(self.omega), len(self.Efermi) * 3 ** formula.ndim)  # we will first get it in this shape, then transpose
 
         restot = np.zeros(restot_shape_tmp, self.dtype)
-
         for ik in range(data_K.nk):
-            degen_groups = data_K.get_bands_in_range_groups_ik(
-                ik, -np.inf, np.inf, degen_thresh=self.degen_thresh, degen_Kramers=self.degen_Kramers)
-            # now find needed pairs:
-            # as a dictionary {((ibm1,ibm2),(ibn1,ibn2)):(Em,En)}
-            degen_group_pairs = [
-                (ibm, ibn, Em, En) for ibm, Em in degen_groups.items() for ibn, En in degen_groups.items()
-                if self.nonzero(Em, En)
-            ]
+            # degen_groups = data_K.get_bands_in_range_groups_ik(
+            #     ik, -np.inf, np.inf, degen_thresh=self.degen_thresh, degen_Kramers=self.degen_Kramers)
+            # # print(degen_groups)
+            # # now find needed pairs:
+            # # as a dictionary {((ibm1,ibm2),(ibn1,ibn2)):(Em,En)}
+            # degen_group_pairs = [
+            #     (ibm, ibn, Em, En) for ibm, Em in degen_groups.items() for ibn, En in degen_groups.items()
+            #     if self.nonzero(Em, En)
+            # ]
+            # print([(ik, np.arange(*pair[0]), np.arange(*pair[1])) for pair in degen_group_pairs])
+            # npair = len(degen_group_pairs)
+            # if npair == 0:
+            #     continue
+            E = data_K.E_K[ik, :]
+            degen_group_pairs = [[[n],[m], E[n], E[m]] for n in np.arange(data_K.num_wann)
+                                                       for m in np.arange(data_K.num_wann)]
             npair = len(degen_group_pairs)
-            if npair == 0:
-                continue
-
             matrix_elements = np.array(
-                [formula.trace_ln(ik, np.arange(*pair[0]), np.arange(*pair[1])) for pair in degen_group_pairs])
+                [formula.trace_ln(ik, pair[0], pair[1]) for pair in degen_group_pairs])
+            # matrix_elements = np.array(
+            #     [formula.trace_ln(ik, np.arange(*pair[0]), np.arange(*pair[1])) for pair in degen_group_pairs])
             factor_Efermi = np.array([self.factor_Efermi(pair[2], pair[3]) for pair in degen_group_pairs])
             factor_omega = np.array([self.factor_omega(pair[2], pair[3]) for pair in degen_group_pairs]).T
             restot += factor_omega @ (factor_Efermi[:, :, None] *

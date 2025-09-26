@@ -85,7 +85,7 @@ class Q2_K:
             res = self.data_K.A_H
         else:
             res = self.data_K.A_H_internal
-        return res * self.A_to_cm
+        return self.A_eta #res * self.A_to_cm
 
     @cached_property
     def D_no_eta(self):
@@ -93,7 +93,7 @@ class Q2_K:
         anti_kron = self.anti_kron
         V_H = self.data_K.Xbar('Ham', 1) * self.eV_to_erg * self.A_to_cm
         res = -V_H * invEdif[:, :, :, None]
-        return res * anti_kron[:,:,:,None]
+        return self.D_eta #res #* anti_kron[:,:,:,None]
 
     @cached_property
     def D_eta(self):
@@ -152,6 +152,15 @@ class Q2_K:
         summ += hbar * 1j * np.einsum('knlj, klmi -> knmij', A, V)
         summ -= hbar * 1j * np.einsum('knli, klmj -> knmij', V, A)
         return summ
+
+    @cached_property
+    def berry_curvature_truncation_no_ring(self):
+        A = self.A
+        lev = self.levicivita
+        
+        Omega = np.zeros((self.data_K.nk, self.data_K.num_wann, self.data_K.num_wann, 3,), dtype=complex)
+        Omega += 1j * np.einsum('qnlj, qlmk, ijk -> qnmi', A, A, lev)
+        return Omega
 
     @cached_property
     def berry_curvature_truncation(self):
@@ -233,7 +242,7 @@ class Q2_K:
         """ NO RING """
         Omega_bar = self.data_K.Xbar('OO') * (self.A_to_cm**2)
         A_bar = self.data_K.Xbar('AA') * self.A_to_cm
-        A = self.A_eta
+        A = self.A
         lev = self.levicivita
 
         summ = np.zeros((self.data_K.nk, self.data_K.num_wann, self.data_K.num_wann, 3, 3), dtype=complex)
@@ -479,7 +488,7 @@ class Q2_K:
         # Eq (D2), off diag
         V = self.velocity
         dE = self.dE
-        A = self.A_eta
+        A = self.A
         lev = self.levicivita
         S = self.S         
 

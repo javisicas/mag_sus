@@ -224,7 +224,7 @@ class test_dA_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class test_dA(DynamicCalculator):
@@ -254,7 +254,7 @@ class test_truncation_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class test_truncation(DynamicCalculator):
@@ -284,7 +284,7 @@ class test_dA_from_gender_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class test_dA_from_gender(DynamicCalculator):
@@ -314,7 +314,7 @@ class test_wang_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class test_wang(DynamicCalculator):
@@ -357,7 +357,7 @@ class Mag_sus_occ_2_spin_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_2_spin(DynamicCalculator):
@@ -395,7 +395,7 @@ class Mag_sus_occ_2_orb_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_2_orb(DynamicCalculator):
@@ -433,7 +433,7 @@ class Mag_sus_occ_2_orb_truncation_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_2_orb_truncation(DynamicCalculator):
@@ -469,7 +469,7 @@ class Mag_sus_occ_2_orb_wang_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_2_orb_wang(DynamicCalculator):
@@ -505,7 +505,7 @@ class Mag_sus_occ_2_orb_wang_2_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_2_orb_wang_2(DynamicCalculator):
@@ -544,7 +544,7 @@ class Mag_sus_inter_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_inter(DynamicCalculator):
@@ -580,7 +580,7 @@ class Mag_sus_inter_correction_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_inter_correction(DynamicCalculator):
@@ -621,7 +621,7 @@ class Mag_sus_occ_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ(DynamicCalculator):
@@ -660,7 +660,7 @@ class Mag_sus_occ_mass_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_mass(DynamicCalculator):
@@ -688,7 +688,7 @@ class Mag_sus_geo_truncation_formula(Formula):
         super().__init__(data_K, **parameters)
         Edif = data_K.Q2.Edif
         M = data_K.Q2.magnetic_dipole_no_ring
-        O = data_K.Q2.berry_curvature_truncation
+        O = data_K.Q2.berry_curvature_truncation_no_ring
 
         summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
         summ += -1/8 * elementary_charge**2 * hbar**(-2) * speed_of_light**(-2) * np.einsum('knm, knmi, kmnl -> knmil', Edif, O, O)
@@ -700,7 +700,7 @@ class Mag_sus_geo_truncation_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_geo_truncation(DynamicCalculator):
@@ -737,7 +737,7 @@ class Mag_sus_geo_wang_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_geo_wang(DynamicCalculator):
@@ -762,17 +762,18 @@ class Mag_sus_VV_formula(Formula):
         super().__init__(data_K, **parameters)
         M = data_K.Q2.magnetic_dipole_no_ring
         Edif = data_K.Q2.Edif
-        invEdif_eta = Edif / (Edif ** 2 + data_K.Q2.eta ** 2)
+        # invEdif_eta = Edif / (Edif ** 2 + data_K.Q2.eta ** 2)
+        invEdif = data_K.Q2.invEdif
 
         summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
-        summ += 1 * np.einsum('kmn, knmi, kmnl -> knmil', invEdif_eta, M, M)
+        summ += 1 * np.einsum('kmn, knmi, kmnl -> knmil', invEdif, M, M)
 
         self.Imn = summ
         self.ndim = 2
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_VV(DynamicCalculator):
@@ -795,7 +796,7 @@ class Mag_sus_VV(DynamicCalculator):
 class Mag_sus_occ_no_ring_formula(Formula):
     def __init__(self, data_K, spin=True, **parameters):
         super().__init__(data_K, **parameters)
-        A = data_K.Q2.A_eta
+        A = data_K.Q2.A
         ddE = data_K.Q2.ddE
         lev = data_K.Q2.levicivita
 
@@ -808,7 +809,7 @@ class Mag_sus_occ_no_ring_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_no_ring(DynamicCalculator):
@@ -832,7 +833,7 @@ class Mag_sus_occ_mass_no_ring_formula(Formula):
     def __init__(self, data_K, spin=True, **parameters):
         super().__init__(data_K, **parameters)
         mass_sum_rule = data_K.Q2.mass_sum_rule # no antirkon inside
-        A = data_K.Q2.A_eta
+        A = data_K.Q2.A
         lev = data_K.Q2.levicivita
 
         summ = np.zeros((data_K.nk, data_K.num_wann, data_K.num_wann, 3, 3), dtype=complex)
@@ -843,7 +844,7 @@ class Mag_sus_occ_mass_no_ring_formula(Formula):
 
     def trace_ln(self, ik, inn1, inn2):
         inn3 = np.concatenate((inn1, inn2))
-        return self.Imn[ik, inn3].sum(axis=0)[inn3].sum(axis=0)
+        return self.Imn[ik, inn1].sum(axis=0)[inn2].sum(axis=0)
 
 
 class Mag_sus_occ_mass_no_ring(DynamicCalculator):
